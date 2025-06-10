@@ -12,6 +12,8 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
+import com.example.bmibuddy.data.BmiHistory
+import com.example.bmibuddy.data.BmiRecord
 
 class MainActivity : AppCompatActivity() {
     
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var healthTip: TextView
     private lateinit var historyButton: MaterialButton
     private lateinit var settingsButton: MaterialButton
+    private lateinit var bmiHistory: BmiHistory
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         healthTip = findViewById(R.id.healthTip)
         historyButton = findViewById(R.id.historyButton)
         settingsButton = findViewById(R.id.settingsButton)
+        bmiHistory = BmiHistory(this)
     }
     
     private fun setupListeners() {
@@ -111,6 +115,16 @@ class MainActivity : AppCompatActivity() {
             val tip = getBmiTip(category)
             
             displayResults(bmi, category, tip)
+            
+            // Save BMI record to history
+            val record = BmiRecord(
+                height = height,
+                weight = weight,
+                bmi = bmi,
+                category = category,
+                isMetric = isMetric
+            )
+            bmiHistory.addRecord(record)
             
         } catch (e: NumberFormatException) {
             Toast.makeText(this, getString(R.string.invalid_input), Toast.LENGTH_SHORT).show()
